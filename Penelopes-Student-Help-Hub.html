@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Penelope's Student Help Hub</title>
+  <style>
+    :root {
+      --primary: #4F46E5;
+      --primary-light: #6366F1;
+      --primary-dark: #3730A3;
+      --accent: #10B981;
+      --accent-light: #34D399;
+      --bg: #F9FAFB;
+      --card-bg: #FFFFFF;
+      --text: #1F2937;
+      --text-muted: #6B7280;
+      --border: #E5E7EB;
+      --available: #D1FAE5;
+      --available-text: #065F46;
+      --busy: #FEE2E2;
+      --busy-text: #991B1B;
+      --shadow: 0 4px 24px rgba(0,0,0,0.08);
+      --radius: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      font-weight: 700; font-size: 1.25rem; color: var(--primary);
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .nav-logo span { font-size: 1.5rem; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none; color: var(--text-muted); font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--primary); }
+
+    /* HERO */
+    .hero {
+      padding: 10rem 2rem 5rem;
+      text-align: center;
+      background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 50%, #DDD6FE 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: -2px; left: 0; right: 0;
+      height: 80px;
+      background: var(--bg);
+      clip-path: ellipse(55% 100% at 50% 100%);
+    }
+    .hero h1 {
+      font-size: 3rem; font-weight: 800; color: var(--primary-dark);
+      margin-bottom: .75rem;
+    }
+    .hero p {
+      font-size: 1.25rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 2rem;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--accent); color: #fff;
+      padding: .5rem 1.25rem; border-radius: 999px;
+      font-weight: 600; font-size: .95rem;
+    }
+    .hero-badge span { font-size: 1.1rem; }
+
+    /* SECTIONS */
+    section { padding: 5rem 2rem; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-title {
+      font-size: 2rem; font-weight: 700; text-align: center;
+      margin-bottom: .5rem; color: var(--primary-dark);
+    }
+    .section-subtitle {
+      text-align: center; color: var(--text-muted); margin-bottom: 3rem;
+      font-size: 1.05rem;
+    }
+
+    /* SERVICES */
+    .services-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .service-card {
+      background: var(--card-bg); border-radius: var(--radius);
+      padding: 2rem; box-shadow: var(--shadow);
+      text-align: center; transition: transform .2s, box-shadow .2s;
+      border: 1px solid var(--border);
+    }
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(79,70,229,0.12);
+    }
+    .service-icon {
+      width: 56px; height: 56px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem; font-size: 1.5rem;
+    }
+    .service-card:nth-child(1) .service-icon { background: #EEF2FF; }
+    .service-card:nth-child(2) .service-icon { background: #ECFDF5; }
+    .service-card:nth-child(3) .service-icon { background: #FEF3C7; }
+    .service-card:nth-child(4) .service-icon { background: #FCE7F3; }
+    .service-card h3 { font-size: 1.15rem; margin-bottom: .5rem; }
+    .service-card p { color: var(--text-muted); font-size: .95rem; }
+
+    /* AVAILABILITY */
+    #availability { background: #F3F4F6; }
+    .schedule-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 1rem;
+    }
+    .day-card {
+      background: var(--card-bg); border-radius: var(--radius);
+      padding: 1.25rem; text-align: center;
+      box-shadow: var(--shadow); border: 1px solid var(--border);
+      transition: transform .2s;
+    }
+    .day-card:hover { transform: translateY(-2px); }
+    .day-name {
+      font-weight: 700; font-size: 1rem; margin-bottom: .25rem;
+      color: var(--primary-dark);
+    }
+    .day-date { font-size: .8rem; color: var(--text-muted); margin-bottom: .75rem; }
+    .status-badge {
+      display: inline-block; padding: .3rem .85rem; border-radius: 999px;
+      font-size: .8rem; font-weight: 600;
+    }
+    .status-available {
+      background: var(--available); color: var(--available-text);
+    }
+    .status-busy {
+      background: var(--busy); color: var(--busy-text);
+    }
+    .availability-note {
+      text-align: center; margin-top: 2rem; color: var(--text-muted);
+      font-size: .9rem; font-style: italic;
+    }
+
+    /* CONTACT FORM */
+    .contact-wrapper {
+      max-width: 640px; margin: 0 auto;
+      background: var(--card-bg); border-radius: var(--radius);
+      padding: 2.5rem; box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label {
+      display: block; font-weight: 600; margin-bottom: .4rem;
+      font-size: .95rem;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%; padding: .75rem 1rem; border: 1.5px solid var(--border);
+      border-radius: 10px; font-size: 1rem; font-family: inherit;
+      transition: border-color .2s, box-shadow .2s;
+      background: #FAFAFA;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none; border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+      background: #fff;
+    }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .btn-submit {
+      width: 100%; padding: .9rem; border: none; border-radius: 10px;
+      background: var(--primary); color: #fff;
+      font-size: 1.05rem; font-weight: 600; cursor: pointer;
+      transition: background .2s, transform .1s;
+    }
+    .btn-submit:hover { background: var(--primary-light); }
+    .btn-submit:active { transform: scale(0.98); }
+
+    .success-msg {
+      display: none; text-align: center; padding: 2rem;
+      color: var(--accent); font-weight: 600; font-size: 1.1rem;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center; padding: 2rem;
+      color: var(--text-muted); font-size: .9rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2rem; }
+      .hero p { font-size: 1.05rem; }
+      .nav-links { gap: 1rem; }
+      .nav-links a { font-size: .9rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .schedule-grid { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
+      section { padding: 3rem 1.25rem; }
+    }
+    @media (max-width: 480px) {
+      .nav-links { display: none; }
+      .hero { padding: 8rem 1.25rem 4rem; }
+      .hero h1 { font-size: 1.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo"><span>📚</span> Penelope's Help Hub</div>
+    <ul class="nav-links">
+      <li><a href="#services">What I Help With</a></li>
+      <li><a href="#availability">Availability</a></li>
+      <li><a href="#contact">Get Help</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Need Help? I've Got You! 🎓</h1>
+  <p>Hey! I'm Penelope — a fellow student here to help you with tutoring, homework, study sessions, and more. No cost, no stress.</p>
+  <div class="hero-badge"><span>✨</span> 100% Free for All Students</div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-inner">
+    <h2 class="section-title">What I Can Help With</h2>
+    <p class="section-subtitle">Whatever you're working on, let's figure it out together.</p>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">📖</div>
+        <h3>Subject Tutoring</h3>
+        <p>One-on-one sessions on specific subjects you're struggling with. We'll go at your pace.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">✏️</div>
+        <h3>Homework Help</h3>
+        <p>Stuck on an assignment? Let's work through it together and build your understanding.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">👥</div>
+        <h3>Study Groups</h3>
+        <p>Studying with others makes it stick. Join or start a group session for any topic.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">💡</div>
+        <h3>General Support</h3>
+        <p>Need advice on study strategies, time management, or navigating school? I'm here.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AVAILABILITY -->
+<section id="availability">
+  <div class="section-inner">
+    <h2 class="section-title">My Availability</h2>
+    <p class="section-subtitle">Here's when I'm free this week — pick a time that works for you!</p>
+    <div class="schedule-grid" id="scheduleGrid">
+      <!-- Populated by JS -->
+    </div>
+    <p class="availability-note">Schedule updates regularly based on my calendar. Check back for the latest!</p>
+  </div>
+</section>
+
+<!-- CONTACT FORM -->
+<section id="contact">
+  <div class="section-inner">
+    <h2 class="section-title">Request Help</h2>
+    <p class="section-subtitle">Fill out this quick form and I'll get back to you ASAP!</p>
+    <div class="contact-wrapper">
+      <form id="helpForm" action="https://formsubmit.co/ajax/10126@granitemountainschool.com" method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" placeholder="e.g. Alex Johnson" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" placeholder="you@school.edu" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="helpType">What Do You Need Help With?</label>
+          <select id="helpType" name="helpType" required>
+            <option value="" disabled selected>Choose a category…</option>
+            <option value="tutoring">Subject Tutoring</option>
+            <option value="homework">Homework Help</option>
+            <option value="studygroup">Study Group</option>
+            <option value="general">General Support / Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject or Topic</label>
+          <input type="text" id="subject" name="subject" placeholder="e.g. Algebra II, Essay Writing, Biology" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="prefDate">Preferred Date</label>
+            <input type="date" id="prefDate" name="prefDate">
+          </div>
+          <div class="form-group">
+            <label for="prefTime">Preferred Time</label>
+            <select id="prefTime" name="prefTime">
+              <option value="" disabled selected>Pick a time…</option>
+              <option value="morning">Morning (8 AM – 12 PM)</option>
+              <option value="afternoon">Afternoon (12 – 5 PM)</option>
+              <option value="evening">Evening (5 – 9 PM)</option>
+              <option value="flexible">I'm flexible!</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="details">Any Other Details</label>
+          <textarea id="details" name="details" placeholder="Tell me a bit more about what you're working on or what's tricky…"></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Send My Request 🚀</button>
+      </form>
+      <p style="text-align:center; margin-top:1rem; color:var(--text-muted); font-size:.85rem;">
+        Or email me directly at <a href="mailto:10126@granitemountainschool.com" style="color:var(--primary);">10126@granitemountainschool.com</a>
+      </p>
+      <div class="success-msg" id="successMsg">
+        ✅ Got it! I'll get back to you soon. Hang tight!
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Made with 💜 by Penelope &nbsp;|&nbsp; Free help for fellow students</p>
+</footer>
+
+<script>
+  // --- Generate this week's availability dynamically ---
+  (function() {
+    const grid = document.getElementById('scheduleGrid');
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 = Sun
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+
+    const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    // Current busy events from calendar (none right now!)
+    // To mark a day busy, add the date string "YYYY-MM-DD" to this array:
+    const busyDates = [];
+
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      const dateStr = d.toISOString().split('T')[0];
+      const isBusy = busyDates.includes(dateStr);
+      const isPast = d < new Date(today.toDateString());
+
+      const card = document.createElement('div');
+      card.className = 'day-card';
+      card.innerHTML = `
+        <div class="day-name">${dayNames[i]}</div>
+        <div class="day-date">${monthNames[d.getMonth()]} ${d.getDate()}</div>
+        <span class="status-badge ${isPast ? 'status-busy' : isBusy ? 'status-busy' : 'status-available'}">
+          ${isPast ? 'Past' : isBusy ? 'Busy' : 'Available'}
+        </span>
+      `;
+      grid.appendChild(card);
+    }
+  })();
+
+  // --- Contact form handler (sends to email via FormSubmit) ---
+  document.getElementById('helpForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+    const submitBtn = form.querySelector('.btn-submit');
+    submitBtn.textContent = 'Sending...';
+    submitBtn.disabled = true;
+
+    const formData = new FormData(form);
+    const data = {};
+    formData.forEach((val, key) => data[key] = val);
+
+    // Add FormSubmit config
+    data['_subject'] = 'New Help Request from ' + (data.name || 'a student');
+    data['_template'] = 'table';
+    data['_captcha'] = 'false';
+
+    fetch('https://formsubmit.co/ajax/10126@granitemountainschool.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+      form.style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    })
+    .catch(error => {
+      submitBtn.textContent = 'Send My Request 🚀';
+      submitBtn.disabled = false;
+      alert('Oops! Something went wrong. Please try again or email me directly at 10126@granitemountainschool.com');
+    });
+  });
+
+  // Set min date on date picker to today
+  (function() {
+    const dateInput = document.getElementById('prefDate');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', today);
+  })();
+</script>
+
+</body>
+</html>
